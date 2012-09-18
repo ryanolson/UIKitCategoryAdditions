@@ -39,10 +39,7 @@ static UIViewController *_presentVC;
                     onDismiss:(DismissBlock) dismissed                   
                      onCancel:(CancelBlock) cancelled
 {
-    [_cancelBlock release];
     _cancelBlock  = [cancelled copy];
-    
-    [_dismissBlock release];
     _dismissBlock  = [dismissed copy];
 
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:title 
@@ -69,8 +66,6 @@ static UIViewController *_presentVC;
     if([view isKindOfClass:[UIBarButtonItem class]])
         [actionSheet showFromBarButtonItem:(UIBarButtonItem*) view animated:YES];
     
-    [actionSheet release];
-    
 }
 
 + (void) photoPickerWithTitle:(NSString*) title
@@ -79,14 +74,9 @@ static UIViewController *_presentVC;
                 onPhotoPicked:(PhotoPickedBlock) photoPicked                   
                      onCancel:(CancelBlock) cancelled
 {
-    [_cancelBlock release];
     _cancelBlock  = [cancelled copy];
-    
-    [_photoPickedBlock release];
     _photoPickedBlock  = [photoPicked copy];
-    
-    [_presentVC release];
-    _presentVC = [presentVC retain];
+    _presentVC = presentVC;
     
     int cancelButtonIndex = -1;
 
@@ -122,7 +112,6 @@ static UIViewController *_presentVC;
     if([view isKindOfClass:[UIBarButtonItem class]])
         [actionSheet showFromBarButtonItem:(UIBarButtonItem*) view animated:YES];
     
-    [actionSheet release];    
 }
 
 
@@ -133,8 +122,7 @@ static UIViewController *_presentVC;
         editedImage = (UIImage*) [info valueForKey:UIImagePickerControllerOriginalImage];
     
     _photoPickedBlock(editedImage);
-	[picker dismissModalViewControllerAnimated:YES];	
-	[picker autorelease];
+	[picker dismissModalViewControllerAnimated:YES];
 }
 
 
@@ -142,8 +130,6 @@ static UIViewController *_presentVC;
 {
     // Dismiss the image selection and close the program
     [_presentVC dismissModalViewControllerAnimated:YES];    
-	[picker autorelease];
-    [_presentVC release];
     _cancelBlock();
 }
 
